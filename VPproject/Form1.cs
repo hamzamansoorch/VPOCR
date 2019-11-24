@@ -10,11 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace VPproject
 {
     public partial class Form1 : Form
     {
+        Capture cap;
+        bool streaming;
+        Stopwatch s = new Stopwatch();
         string path = "";
         private readonly string _tesseractExePath;
         private readonly string _language;
@@ -24,6 +29,13 @@ namespace VPproject
             InitializeComponent();
             welcome_panel.Visible = true;
             main_pane.Visible = false;
+            Font f = new Font("Consolas", 11, FontStyle.Bold);
+            browse_btn.Font = f;
+            button1.Font = f;
+            perform_button.Font = f;
+            capture_btn.Font = f;
+            streamOnOff.Font = f;
+            back_button.Font = f;
         }
 
         public Form1(string tesseractDir, string language = "en", string dataDir = null)
@@ -41,9 +53,46 @@ namespace VPproject
         }
 
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            streaming = false;
+            cap = new Capture(); 
+        }
+
+        private void streamOnOff_Click(object sender, EventArgs e)
+        {
+            if(!streaming)
+            {
+                Application.Idle += streamProcess;
+                     
+            }
+            else
+            {
+                Application.Idle -= streamProcess;
+
+            }
+
+            streaming = !streaming;
+             
+        }
+
+        private void streamProcess(object sender, System.EventArgs e)
+        {
+            var img = cap.QueryFrame().ToImage<Bgr, byte>();
+            var bmp = img.ToBitmap();
+            picStream.Image = bmp;
+        }
+
+        private void capture_btn_Click(object sender, EventArgs e)
+        {
+            var img = cap.QueryFrame().ToImage<Bgr, byte>();
+            var bmp = img.ToBitmap();
+            main_pb.Image = bmp;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            welcome_panel.Visible = false;
+           // welcome_panel.Visible = false;
             main_pane.Visible = true;
         }
 
@@ -51,6 +100,7 @@ namespace VPproject
 
         private void browse_btn_Click(object sender, EventArgs e)
         {
+
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Image Files (*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
             if (open.ShowDialog() == DialogResult.OK)
@@ -60,20 +110,34 @@ namespace VPproject
                 path = open.FileName;
                 main_pb.SizeMode = PictureBoxSizeMode.StretchImage;
             }
-
-            Image image = Image.FromFile(path);
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                // Save image to stream.
-                image.Save(stream, ImageFormat.Bmp);
-
-
-                var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
-                var Text = service.GetText(stream);
-                MessageBox.Show(Text);
-            }
         }
+
+            
+
+        private void perform_button_Click(object sender, EventArgs e)
+        {
+                WaitForm please = new WaitForm();
+                please.Visible = true;
+                Application.DoEvents();
+                //Image image = Image.FromFile(path);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    // Save image to stream.
+                    main_pb.Image.Save(stream, ImageFormat.Bmp);
+
+
+                    var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
+                    var Text = service.GetText(stream);
+                    please.Visible = false;
+
+                    MessageBox.Show(Text);
+                }
+                browse_tb.Text = "";
+                path = "";        
+
+        }
+           
+        
 
         //TEXT Tesseract code
         public string GetText(params Stream[] images)
@@ -172,5 +236,23 @@ namespace VPproject
             return Path.Combine(tempPath, Guid.NewGuid().ToString());
         }
 
+
+
+        private void main_pane_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void back_button_Click(object sender, EventArgs e)
+        {
+            main_pane.Visible = false;
+            welcome_panel.Visible = true;
+        }
+
+        private void streamOnOff_MouseHover(object sender, EventArgs e)
+        {
+            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
+            ToolTip1.SetToolTip(streamOnOff, "Starts live picture");
+        }
     }
 }

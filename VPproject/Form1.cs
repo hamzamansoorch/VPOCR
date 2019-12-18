@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using IronOcr;
+
+
 
 namespace VPproject
 {
@@ -23,13 +26,15 @@ namespace VPproject
         string path = "";
         private readonly string _tesseractExePath;
         private readonly string _language;
+        Bitmap c;
 
         public Form1()
         {
             InitializeComponent();
             welcome_panel.Visible = true;
             main_pane.Visible = false;
-            Font f = new Font("Consolas", 11, FontStyle.Bold);
+            log_pan.Visible = false;
+            Font f = new Font("Corbel", 11, FontStyle.Bold);
             browse_btn.Font = f;
             button1.Font = f;
             perform_button.Font = f;
@@ -56,15 +61,16 @@ namespace VPproject
         private void Form1_Load(object sender, EventArgs e)
         {
             streaming = false;
-            cap = new Capture(); 
+
+            cap = new Capture();
         }
 
         private void streamOnOff_Click(object sender, EventArgs e)
         {
-            if(!streaming)
+            if (!streaming)
             {
                 Application.Idle += streamProcess;
-                     
+
             }
             else
             {
@@ -73,7 +79,7 @@ namespace VPproject
             }
 
             streaming = !streaming;
-             
+
         }
 
         private void streamProcess(object sender, System.EventArgs e)
@@ -85,15 +91,70 @@ namespace VPproject
 
         private void capture_btn_Click(object sender, EventArgs e)
         {
+
             var img = cap.QueryFrame().ToImage<Bgr, byte>();
             var bmp = img.ToBitmap();
-            main_pb.Image = bmp;
+            //bmp = new System.Drawing.Bitmap(2, 2, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            Bitmap c = new Bitmap(bmp);
+
+
+            int width = c.Width;
+            int height = c.Height;
+
+            int i = 0;
+            Color p;
+            c.Save(@"C:\Users\Hamza_PC\Downloads\VP Project Test\abc.bmp");
+            //Bitmap d = new Bitmap(c.Width, c.Height);
+            int x, y;
+
+            //The we make the cicles to read pixel by pixel and we make the comparation with the withe color.    
+
+
+            // Loop through the images pixels to reset color.
+
+
+            if (c != null)
+            {
+                // Establish a color object.
+                Color curColor;
+                int ret;
+                // The width of the image.
+                for (int iX = 0; iX < c.Width; iX++)
+                {
+                    // The height of the image.
+                    for (int iY = 0; iY < c.Height; iY++)
+                    {
+                        // Get the pixel from bitmap object.
+                        curColor = c.GetPixel(iX, iY);
+                        // Transform RGB to Y (gray scale)
+                        ret = (int)(curColor.R * 0.299 + curColor.G * 0.578 + curColor.B * 0.114);
+                        // This is our threshold, you can change it and to try what are different.
+                        if (ret > 120)
+                        {
+                            ret = 255;
+                        }
+                        else
+                        {
+                            ret = 0;
+                        }
+                        // Set the pixel into the bitmap object.
+                        c.SetPixel(iX, iY, Color.FromArgb(ret, ret, ret));
+                    } // The closing 'The height of the image'.
+                } // The closing 'The width of the image'.
+                  // Force to redraw.
+                Invalidate();
+
+            }
+
+            main_pb.Image = c;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-           // welcome_panel.Visible = false;
-            main_pane.Visible = true;
+            // welcome_panel.Visible = false;
+            // main_pane.Visible = true;
+            log_pan.Visible = true;
         }
 
 
@@ -103,45 +164,159 @@ namespace VPproject
 
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Image Files (*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
+
+
             if (open.ShowDialog() == DialogResult.OK)
             {
-                main_pb.Image = new Bitmap(open.FileName);
+                Bitmap c = new Bitmap(open.FileName);
+              //  Bitmap d = new Bitmap(c.Width, c.Height);
+
+                int x, y;
+
+                // Loop through the images pixels to reset color.
+                //for (x = 0; x < c.Width; x++)
+                //{
+                //    for (y = 0; y < c.Height; y++)
+                //    {
+                //        Color oc = c.GetPixel(x, y);
+                //        int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
+                //        Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
+                //        d.SetPixel(x, y, nc);
+                //    }
+                //}
+                //if (c != null)
+                //{
+                //    // Establish a color object.
+                //    Color curColor;
+                //    int ret;
+                //    // The width of the image.
+                //    for (int iX = 0; iX < c.Width; iX++)
+                //    {
+                //        // The height of the image.
+                //        for (int iY = 0; iY < c.Height; iY++)
+                //        {
+                //            // Get the pixel from bitmap object.
+                //            curColor = c.GetPixel(iX, iY);
+                //            // Transform RGB to Y (gray scale)
+                //            ret = (int)(curColor.R * 0.299 + curColor.G * 0.578 + curColor.B * 0.114);
+                //            // This is our threshold, you can change it and to try what are different.
+                //            if (ret > 120)
+                //            {
+                //                ret = 255;
+                //            }
+                //            else
+                //            {
+                //                ret = 0;
+                //            }
+                //            // Set the pixel into the bitmap object.
+                //            c.SetPixel(iX, iY, Color.FromArgb(ret, ret, ret));
+                //        } // The closing 'The height of the image'.
+                //    } // The closing 'The width of the image'.
+                //      // Force to redraw.
+                //    Invalidate();
+
+                //}
+                main_pb.Image = c;
                 browse_tb.Text = open.FileName;
                 path = open.FileName;
                 main_pb.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
 
-            
+
 
         private void perform_button_Click(object sender, EventArgs e)
         {
+            var ocr = new IronOcr.AutoOcr();
+          
+            var img = cap.QueryFrame().ToImage<Bgr, byte>();
+            var bmp = img.ToBitmap();
+            //bmp = new System.Drawing.Bitmap(2, 2, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            //Bitmap c = new Bitmap(bmp);
+            
+            //{
+            //    CleanBackgroundNoise = true,
+            //EnhanceContrast = true,
+            //EnhanceResolution = true,
+            //Language = IronOcr.Languages.English.OcrLanguagePack,
+            //Strategy = IronOcr.AdvancedOcr.OcrStrategy.Advanced,
+            //ColorSpace = AdvancedOcr.OcrColorSpace.GrayScale,
+            //DetectWhiteTextOnDarkBackgrounds = false,
+            //InputImageType = AdvancedOcr.InputTypes.Document,
+            //RotateAndStraighten = true,
+            //ReadBarCodes = false,
+            //ColorDepth = 4
+            //};
+
+            if (browseCheck.Checked == true)
+            {
                 WaitForm please = new WaitForm();
                 please.Visible = true;
                 Application.DoEvents();
-                //Image image = Image.FromFile(path);
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    // Save image to stream.
-                    main_pb.Image.Save(stream, ImageFormat.Bmp);
+                Image image = Image.FromFile(path);
+            
+                var Area = new System.Drawing.Rectangle();// { X = 0, Y = 0, Height = 250, Width = 640 };
+
+                var Result = ocr.Read(main_pb.Image, Area);
+                MessageBox.Show(Result.Text);
+                please.Visible = false;
+
+            }
+            else if (liveCheck.Checked == true)
+            {
+                WaitForm please = new WaitForm();
+                please.Visible = true;
+                Application.DoEvents();
+                var Area = new System.Drawing.Rectangle();// { X = 10, Y = 10, Height = 250, Width = 640 };
+                var Result = ocr.Read(main_pb.Image, Area);
+                MessageBox.Show(Result.Text);
+                please.Visible = false;
+            }
+          
+            
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    // Save image to stream.
+            //    var Result = ocr.Read(main_pb.Image, Area);
+
+            //    //var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
+            //    //var Text = service.GetText(stream);
 
 
-                    var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
-                    var Text = service.GetText(stream);
-                    please.Visible = false;
+            //    MessageBox.Show(Result.Text);
+            //    please.Visible = false;
+            //}
 
-                    MessageBox.Show(Text);
-                }
-                browse_tb.Text = "";
-                path = "";        
+            //var Result = ocr.Read(image, Area);
+
+            //MessageBox.Show(Result.Text);
+
+
+            ////Image image = Image.FromFile(path);
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    // Save image to stream.
+            //    main_pb.Image.Save(stream, ImageFormat.Bmp);
+
+
+            //    var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
+            //    var Text = service.GetText(stream);
+
+
+            //    MessageBox.Show(Text);
+            //}
+            //browse_tb.Text = "";
+            //path = "";        
 
         }
-           
-        
+
+
 
         //TEXT Tesseract code
         public string GetText(params Stream[] images)
         {
+            
+          
             var output = string.Empty;
 
             if (images.Any())
@@ -240,7 +415,7 @@ namespace VPproject
 
         private void main_pane_Paint(object sender, PaintEventArgs e)
         {
-
+            
         }
 
         private void back_button_Click(object sender, EventArgs e)
@@ -277,6 +452,37 @@ namespace VPproject
         private void label5_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void log_btn_Click(object sender, EventArgs e)
+        {
+            welcome_panel.Visible = true;
+            log_pan.Visible = false;
+            main_pane.Visible = true;
+            //tb_un.Text = "hamzamansoorch";
+            //tb_pw.Text = "1234";
+            //if (tb_un.Text== "hamzamansoorch" && tb_pw.Text=="1234")
+            //{
+
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Invalid Entries");
+            //}
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            if(c!= null)
+            {
+                g.DrawImage(c, 140, 10, c.Width, c.Height);
+            }
         }
     }
 }

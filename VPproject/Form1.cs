@@ -13,13 +13,19 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using IronOcr;
+using MySql.Data.MySqlClient;
 
 
 
 namespace VPproject
 {
-    public partial class Form1 : Form
+    public partial class card_proj : Form
     {
+        string con = "datasource=127.0.0.1;port=3306;username=root;password=1234";
+        string query = "Insert into testdb1.student_data(student_id,student_name,student_program,student_age) Values ('01-241162-028','Usama Mansoor','BSE','18')";
+    
+
+        ProcessStartInfo startInfo;
         Capture cap;
         bool streaming;
         Stopwatch s = new Stopwatch();
@@ -28,9 +34,21 @@ namespace VPproject
         private readonly string _language;
         Bitmap c;
 
-        public Form1()
+        public card_proj()
         {
             InitializeComponent();
+            MySqlConnection conDB = new MySqlConnection(con);
+            MySqlCommand cmdDB = new MySqlCommand(query, conDB);
+            MySqlDataReader myReader;
+
+            conDB.Open();
+            //cmdDB.ExecuteReader();
+            conDB.Close();
+
+            startInfo = new ProcessStartInfo();
+            startInfo.FileName = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\ocrScript.py";
+
+
             welcome_panel.Visible = true;
             main_pane.Visible = false;
             log_pan.Visible = false;
@@ -43,11 +61,11 @@ namespace VPproject
             back_button.Font = f;
         }
 
-        public Form1(string tesseractDir, string language = "en", string dataDir = null)
+        public card_proj(string tesseractDir, string language = "en", string dataDir = null)
         {
 
-            //Tesseract Initiation
-            // Tesseract configs.
+            
+            // Tesseract checking
             _tesseractExePath = Path.Combine(tesseractDir, "tesseract.exe");
             _language = language;
 
@@ -58,12 +76,7 @@ namespace VPproject
         }
 
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            streaming = false;
-
-            cap = new Capture();
-        }
+    
 
         private void streamOnOff_Click(object sender, EventArgs e)
         {
@@ -91,10 +104,9 @@ namespace VPproject
 
         private void capture_btn_Click(object sender, EventArgs e)
         {
-
             var img = cap.QueryFrame().ToImage<Bgr, byte>();
             var bmp = img.ToBitmap();
-            //bmp = new System.Drawing.Bitmap(2, 2, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            
             Bitmap c = new Bitmap(bmp);
 
 
@@ -103,57 +115,18 @@ namespace VPproject
 
             int i = 0;
             Color p;
-            c.Save(@"C:\Users\Hamza_PC\Downloads\VP Project Test\abc.bmp");
-            //Bitmap d = new Bitmap(c.Width, c.Height);
+            File.Delete(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
+            c.Save(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
+            startInfo.Arguments = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp";
+          
             int x, y;
-
-            //The we make the cicles to read pixel by pixel and we make the comparation with the withe color.    
-
-
-            // Loop through the images pixels to reset color.
-
-
-            if (c != null)
-            {
-                // Establish a color object.
-                Color curColor;
-                int ret;
-                // The width of the image.
-                for (int iX = 0; iX < c.Width; iX++)
-                {
-                    // The height of the image.
-                    for (int iY = 0; iY < c.Height; iY++)
-                    {
-                        // Get the pixel from bitmap object.
-                        curColor = c.GetPixel(iX, iY);
-                        // Transform RGB to Y (gray scale)
-                        ret = (int)(curColor.R * 0.299 + curColor.G * 0.578 + curColor.B * 0.114);
-                        // This is our threshold, you can change it and to try what are different.
-                        if (ret > 120)
-                        {
-                            ret = 255;
-                        }
-                        else
-                        {
-                            ret = 0;
-                        }
-                        // Set the pixel into the bitmap object.
-                        c.SetPixel(iX, iY, Color.FromArgb(ret, ret, ret));
-                    } // The closing 'The height of the image'.
-                } // The closing 'The width of the image'.
-                  // Force to redraw.
-                Invalidate();
-
-            }
-
             main_pb.Image = c;
 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // welcome_panel.Visible = false;
-            // main_pane.Visible = true;
+           
             log_pan.Visible = true;
         }
 
@@ -165,57 +138,15 @@ namespace VPproject
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Image Files (*.jpg; *.jpeg; *.gif; *.bmp)|*.jpg; *.jpeg; *.gif; *.bmp";
 
-
             if (open.ShowDialog() == DialogResult.OK)
             {
+                startInfo.Arguments = open.FileName;
                 Bitmap c = new Bitmap(open.FileName);
-              //  Bitmap d = new Bitmap(c.Width, c.Height);
+            
 
                 int x, y;
 
-                // Loop through the images pixels to reset color.
-                //for (x = 0; x < c.Width; x++)
-                //{
-                //    for (y = 0; y < c.Height; y++)
-                //    {
-                //        Color oc = c.GetPixel(x, y);
-                //        int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
-                //        Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
-                //        d.SetPixel(x, y, nc);
-                //    }
-                //}
-                //if (c != null)
-                //{
-                //    // Establish a color object.
-                //    Color curColor;
-                //    int ret;
-                //    // The width of the image.
-                //    for (int iX = 0; iX < c.Width; iX++)
-                //    {
-                //        // The height of the image.
-                //        for (int iY = 0; iY < c.Height; iY++)
-                //        {
-                //            // Get the pixel from bitmap object.
-                //            curColor = c.GetPixel(iX, iY);
-                //            // Transform RGB to Y (gray scale)
-                //            ret = (int)(curColor.R * 0.299 + curColor.G * 0.578 + curColor.B * 0.114);
-                //            // This is our threshold, you can change it and to try what are different.
-                //            if (ret > 120)
-                //            {
-                //                ret = 255;
-                //            }
-                //            else
-                //            {
-                //                ret = 0;
-                //            }
-                //            // Set the pixel into the bitmap object.
-                //            c.SetPixel(iX, iY, Color.FromArgb(ret, ret, ret));
-                //        } // The closing 'The height of the image'.
-                //    } // The closing 'The width of the image'.
-                //      // Force to redraw.
-                //    Invalidate();
 
-                //}
                 main_pb.Image = c;
                 browse_tb.Text = open.FileName;
                 path = open.FileName;
@@ -227,191 +158,91 @@ namespace VPproject
 
         private void perform_button_Click(object sender, EventArgs e)
         {
-            var ocr = new IronOcr.AutoOcr();
-          
-            var img = cap.QueryFrame().ToImage<Bgr, byte>();
-            var bmp = img.ToBitmap();
-            //bmp = new System.Drawing.Bitmap(2, 2, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
-            //Bitmap c = new Bitmap(bmp);
-            
-            //{
-            //    CleanBackgroundNoise = true,
-            //EnhanceContrast = true,
-            //EnhanceResolution = true,
-            //Language = IronOcr.Languages.English.OcrLanguagePack,
-            //Strategy = IronOcr.AdvancedOcr.OcrStrategy.Advanced,
-            //ColorSpace = AdvancedOcr.OcrColorSpace.GrayScale,
-            //DetectWhiteTextOnDarkBackgrounds = false,
-            //InputImageType = AdvancedOcr.InputTypes.Document,
-            //RotateAndStraighten = true,
-            //ReadBarCodes = false,
-            //ColorDepth = 4
-            //};
+            WaitForm please = new WaitForm();
+            please.Visible = true;
+            int count = 0;
+            try
+            {
+                using (Process exeProcess = Process.Start(startInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
+            }
+            catch (Exception x)
+            {
 
+                MessageBox.Show(x.Message);
+            }
+
+            string text = File.ReadAllText(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\test.txt", Encoding.UTF8);
+
+            string search = "01-";
+            string enrollment = "";
+            int pos = text.IndexOf(search);
+            if (pos > 0)
+            {
+                for (int a = pos; a < (pos + 13); a++)
+                {
+                    enrollment = enrollment + text[a];
+                }
+                enroll_box.Text = enrollment;
+                name_box.Text = "";
+                dept_box.Text = "";
+                batch_box.Text = "";
+                semester_box.Text = "";
+                reg_box.Text = "";
+
+
+                string query = "SELECT student_name,student_dept,student_semester,student_batch,student_registration FROM testdb1.student_data where student_id = '" + enrollment + "';";
+                MySqlConnection conDB = new MySqlConnection(con);
+                MySqlCommand cmdDB = new MySqlCommand(query, conDB);
+                MySqlDataReader myReader;
+
+                conDB.Open();
+                myReader = cmdDB.ExecuteReader();
+
+                while (myReader.Read())
+                {
+                    name_box.Text = myReader.GetString("student_name");
+                    dept_box.Text = myReader.GetString("student_dept");
+                    batch_box.Text = myReader.GetString("student_batch");
+                    semester_box.Text = myReader.GetString("student_semester");
+                    reg_box.Text = myReader.GetString("student_registration");
+
+                    count++;
+                }
+                conDB.Close();
+
+                if (count == 0)
+                {
+                    MessageBox.Show("User not found. Add by filling in details");
+                    add_btn.Visible = true;
+
+                }
+            }
+            else if (pos == -1)
+            {
+                MessageBox.Show("Error reading the imgage. Try again.");
+            }
+            please.Visible = false;
             if (browseCheck.Checked == true)
             {
-                WaitForm please = new WaitForm();
+               
                 please.Visible = true;
-                Application.DoEvents();
-                Image image = Image.FromFile(path);
-            
-                var Area = new System.Drawing.Rectangle();// { X = 0, Y = 0, Height = 250, Width = 640 };
 
-                var Result = ocr.Read(main_pb.Image, Area);
-                MessageBox.Show(Result.Text);
+
+
                 please.Visible = false;
 
             }
             else if (liveCheck.Checked == true)
             {
-                WaitForm please = new WaitForm();
+               // WaitForm please = new WaitForm();
                 please.Visible = true;
-                Application.DoEvents();
-                var Area = new System.Drawing.Rectangle();// { X = 10, Y = 10, Height = 250, Width = 640 };
-                var Result = ocr.Read(main_pb.Image, Area);
-                MessageBox.Show(Result.Text);
+
                 please.Visible = false;
             }
-          
-            
-            //using (MemoryStream stream = new MemoryStream())
-            //{
-            //    // Save image to stream.
-            //    var Result = ocr.Read(main_pb.Image, Area);
-
-            //    //var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
-            //    //var Text = service.GetText(stream);
-
-
-            //    MessageBox.Show(Result.Text);
-            //    please.Visible = false;
-            //}
-
-            //var Result = ocr.Read(image, Area);
-
-            //MessageBox.Show(Result.Text);
-
-
-            ////Image image = Image.FromFile(path);
-            //using (MemoryStream stream = new MemoryStream())
-            //{
-            //    // Save image to stream.
-            //    main_pb.Image.Save(stream, ImageFormat.Bmp);
-
-
-            //    var service = new Form1(@"C:\Program Files\Tesseract-OCR", "eng", @"C:\Program Files\Tesseract-OCR\tessdata");
-            //    var Text = service.GetText(stream);
-
-
-            //    MessageBox.Show(Text);
-            //}
-            //browse_tb.Text = "";
-            //path = "";        
-
         }
-
-
-
-        //TEXT Tesseract code
-        public string GetText(params Stream[] images)
-        {
-            
-          
-            var output = string.Empty;
-
-            if (images.Any())
-            {
-                var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempPath);
-                var tempInputFile = NewTempFileName(tempPath);
-                var tempOutputFile = NewTempFileName(tempPath);
-
-                try
-                {
-                    WriteInputFiles(images, tempPath, tempInputFile);
-
-                    var info = new ProcessStartInfo
-                    {
-                        FileName = _tesseractExePath,
-                        Arguments = $"{tempInputFile} {tempOutputFile} -l {_language}",
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-
-                    using (var ps = Process.Start(info))
-                    {
-                        ps.WaitForExit();
-
-                        var exitCode = ps.ExitCode;
-
-                        if (exitCode == 0)
-                        {
-                            output = File.ReadAllText(tempOutputFile + ".txt");
-                        }
-                        else
-                        {
-                            var stderr = ps.StandardError.ReadToEnd();
-                            throw new InvalidOperationException(stderr);
-                        }
-                    }
-                }
-                finally
-                {
-                    Directory.Delete(tempPath, true);
-                }
-            }
-
-            return output;
-        }
-
-        private static void WriteInputFiles(Stream[] inputStreams, string tempPath, string tempInputFile)
-        {
-            // If there is more thant one image file, so build the list file using the images as input files.
-            if (inputStreams.Length > 1)
-            {
-                var imagesListFileContent = new StringBuilder();
-
-                foreach (var inputStream in inputStreams)
-                {
-                    var imageFile = NewTempFileName(tempPath);
-
-                    using (var tempStream = File.OpenWrite(imageFile))
-                    {
-                        CopyStream(inputStream, tempStream);
-                    }
-
-                    imagesListFileContent.AppendLine(imageFile);
-                }
-
-                File.WriteAllText(tempInputFile, imagesListFileContent.ToString());
-            }
-            else
-            {
-                // If is only one image file, than use the image file as input file.
-                using (var tempStream = File.OpenWrite(tempInputFile))
-                {
-                    CopyStream(inputStreams.First(), tempStream);
-                }
-            }
-        }
-
-        private static void CopyStream(Stream input, Stream output)
-        {
-            if (input.CanSeek)
-                input.Seek(0, SeekOrigin.Begin);
-
-            input.CopyTo(output);
-            input.Close();
-        }
-
-        private static string NewTempFileName(string tempPath)
-        {
-            return Path.Combine(tempPath, Guid.NewGuid().ToString());
-        }
-
-
 
         private void main_pane_Paint(object sender, PaintEventArgs e)
         {
@@ -476,10 +307,41 @@ namespace VPproject
             //}
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+      
+
+        private void add_btn_Click(object sender, EventArgs e)
+        {
+            string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "');";
+            MySqlConnection conDB = new MySqlConnection(con);
+            MySqlCommand cmdDB = new MySqlCommand(query, conDB);
+            MySqlDataReader myReader;
+
+            conDB.Open();
+            cmdDB.ExecuteReader();
+            conDB.Close();
+            enroll_box.Text = "";
+            name_box.Text = "";
+            dept_box.Text = "";
+            batch_box.Text = "";
+            semester_box.Text = "";
+            reg_box.Text = "";
+            MessageBox.Show("Added successfully");
+            add_btn.Visible = false;
+
+        }
+
+        private void card_proj_Load(object sender, EventArgs e)
+        {
+            streaming = false;
+
+            cap = new Capture();
+
+        }
+
+        private void card_proj_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            if(c!= null)
+            if (c != null)
             {
                 g.DrawImage(c, 140, 10, c.Width, c.Height);
             }

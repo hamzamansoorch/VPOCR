@@ -1,6 +1,6 @@
 ﻿namespace VPproject
 {
-    partial class Form1
+    partial class card_proj
     {
         /// <summary>
         /// Required designer variable.
@@ -39,12 +39,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.reg_box = new System.Windows.Forms.TextBox();
+            this.batch_box = new System.Windows.Forms.TextBox();
+            this.semester_box = new System.Windows.Forms.TextBox();
+            this.dept_box = new System.Windows.Forms.TextBox();
+            this.enroll_box = new System.Windows.Forms.TextBox();
+            this.name_box = new System.Windows.Forms.TextBox();
             this.back_button = new System.Windows.Forms.Button();
             this.capture_btn = new System.Windows.Forms.Button();
             this.streamOnOff = new System.Windows.Forms.Button();
@@ -63,6 +63,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.add_btn = new System.Windows.Forms.Button();
             this.welcome_panel.SuspendLayout();
             this.main_pane.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picStream)).BeginInit();
@@ -88,6 +89,7 @@
             // 
             this.main_pane.BackColor = System.Drawing.Color.Transparent;
             this.main_pane.BackgroundImage = global::VPproject.Properties.Resources.bg2;
+            this.main_pane.Controls.Add(this.add_btn);
             this.main_pane.Controls.Add(this.browseCheck);
             this.main_pane.Controls.Add(this.liveCheck);
             this.main_pane.Controls.Add(this.label7);
@@ -96,12 +98,12 @@
             this.main_pane.Controls.Add(this.label4);
             this.main_pane.Controls.Add(this.label3);
             this.main_pane.Controls.Add(this.label2);
-            this.main_pane.Controls.Add(this.textBox4);
-            this.main_pane.Controls.Add(this.textBox5);
-            this.main_pane.Controls.Add(this.textBox6);
-            this.main_pane.Controls.Add(this.textBox3);
-            this.main_pane.Controls.Add(this.textBox2);
-            this.main_pane.Controls.Add(this.textBox1);
+            this.main_pane.Controls.Add(this.reg_box);
+            this.main_pane.Controls.Add(this.batch_box);
+            this.main_pane.Controls.Add(this.semester_box);
+            this.main_pane.Controls.Add(this.dept_box);
+            this.main_pane.Controls.Add(this.enroll_box);
+            this.main_pane.Controls.Add(this.name_box);
             this.main_pane.Controls.Add(this.back_button);
             this.main_pane.Controls.Add(this.capture_btn);
             this.main_pane.Controls.Add(this.streamOnOff);
@@ -196,47 +198,47 @@
             this.label2.TabIndex = 14;
             this.label2.Text = "Name";
             // 
-            // textBox4
+            // reg_box
             // 
-            this.textBox4.Location = new System.Drawing.Point(284, 349);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 13;
+            this.reg_box.Location = new System.Drawing.Point(284, 349);
+            this.reg_box.Name = "reg_box";
+            this.reg_box.Size = new System.Drawing.Size(100, 20);
+            this.reg_box.TabIndex = 13;
             // 
-            // textBox5
+            // batch_box
             // 
-            this.textBox5.Location = new System.Drawing.Point(284, 323);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 20);
-            this.textBox5.TabIndex = 12;
+            this.batch_box.Location = new System.Drawing.Point(284, 323);
+            this.batch_box.Name = "batch_box";
+            this.batch_box.Size = new System.Drawing.Size(100, 20);
+            this.batch_box.TabIndex = 12;
             // 
-            // textBox6
+            // semester_box
             // 
-            this.textBox6.Location = new System.Drawing.Point(284, 297);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 20);
-            this.textBox6.TabIndex = 11;
+            this.semester_box.Location = new System.Drawing.Point(284, 297);
+            this.semester_box.Name = "semester_box";
+            this.semester_box.Size = new System.Drawing.Size(100, 20);
+            this.semester_box.TabIndex = 11;
             // 
-            // textBox3
+            // dept_box
             // 
-            this.textBox3.Location = new System.Drawing.Point(79, 349);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 10;
+            this.dept_box.Location = new System.Drawing.Point(79, 349);
+            this.dept_box.Name = "dept_box";
+            this.dept_box.Size = new System.Drawing.Size(100, 20);
+            this.dept_box.TabIndex = 10;
             // 
-            // textBox2
+            // enroll_box
             // 
-            this.textBox2.Location = new System.Drawing.Point(79, 323);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 9;
+            this.enroll_box.Location = new System.Drawing.Point(79, 323);
+            this.enroll_box.Name = "enroll_box";
+            this.enroll_box.Size = new System.Drawing.Size(100, 20);
+            this.enroll_box.TabIndex = 9;
             // 
-            // textBox1
+            // name_box
             // 
-            this.textBox1.Location = new System.Drawing.Point(79, 297);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 8;
+            this.name_box.Location = new System.Drawing.Point(79, 297);
+            this.name_box.Name = "name_box";
+            this.name_box.Size = new System.Drawing.Size(100, 20);
+            this.name_box.TabIndex = 8;
             // 
             // back_button
             // 
@@ -420,18 +422,29 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Welcome";
             // 
-            // Form1
+            // add_btn
+            // 
+            this.add_btn.Location = new System.Drawing.Point(161, 375);
+            this.add_btn.Name = "add_btn";
+            this.add_btn.Size = new System.Drawing.Size(75, 23);
+            this.add_btn.TabIndex = 22;
+            this.add_btn.Text = "Add";
+            this.add_btn.UseVisualStyleBackColor = true;
+            this.add_btn.Visible = false;
+            this.add_btn.Click += new System.EventHandler(this.add_btn_Click);
+            // 
+            // card_proj
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::VPproject.Properties.Resources.bg2;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.welcome_panel);
-            this.Name = "Form1";
+            this.Name = "card_proj";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.Text = "Card Reader";
+            this.Load += new System.EventHandler(this.card_proj_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.card_proj_Paint);
             this.welcome_panel.ResumeLayout(false);
             this.welcome_panel.PerformLayout();
             this.main_pane.ResumeLayout(false);
@@ -459,12 +472,12 @@
         private System.Windows.Forms.PictureBox picStream;
         private System.Windows.Forms.Button capture_btn;
         private System.Windows.Forms.Button back_button;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox reg_box;
+        private System.Windows.Forms.TextBox batch_box;
+        private System.Windows.Forms.TextBox semester_box;
+        private System.Windows.Forms.TextBox dept_box;
+        private System.Windows.Forms.TextBox enroll_box;
+        private System.Windows.Forms.TextBox name_box;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
@@ -481,6 +494,7 @@
         private System.Windows.Forms.Button log_btn;
         private System.Windows.Forms.RadioButton browseCheck;
         private System.Windows.Forms.RadioButton liveCheck;
+        private System.Windows.Forms.Button add_btn;
     }
 }
 

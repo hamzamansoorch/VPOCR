@@ -251,6 +251,8 @@ namespace VPproject
 
         private void back_button_Click(object sender, EventArgs e)
         {
+            tb_un.Text = "";
+            tb_pw.Text = "";
             main_pane.Visible = false;
             welcome_panel.Visible = true;
         }
@@ -292,22 +294,21 @@ namespace VPproject
 
         private void log_btn_Click(object sender, EventArgs e)
         {
-            welcome_panel.Visible = true;
-            log_pan.Visible = false;
-            main_pane.Visible = true;
-            //tb_un.Text = "hamzamansoorch";
-            //tb_pw.Text = "1234";
-            //if (tb_un.Text== "hamzamansoorch" && tb_pw.Text=="1234")
-            //{
-
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Invalid Entries");
-            //}
+            
+           
+            if (tb_un.Text == "hamzamansoorch" && tb_pw.Text == "1234")
+            {
+                welcome_panel.Visible = true;
+                log_pan.Visible = false;
+                main_pane.Visible = true;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Entries");
+            }
         }
 
-      
+
 
         private void add_btn_Click(object sender, EventArgs e)
         {

@@ -146,7 +146,7 @@ namespace VPproject
 
                 int x, y;
 
-
+                
                 main_pb.Image = c;
                 browse_tb.Text = open.FileName;
                 path = open.FileName;
@@ -346,6 +346,12 @@ namespace VPproject
             {
                 g.DrawImage(c, 140, 10, c.Width, c.Height);
             }
+        }
+
+        private void search_btn_Click(object sender, EventArgs e)
+        {
+            SearchAndSort s = new SearchAndSort();
+            s.Show();
         }
     }
 }

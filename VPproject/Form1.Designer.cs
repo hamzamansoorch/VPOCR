@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.welcome_panel = new System.Windows.Forms.Panel();
             this.main_pane = new System.Windows.Forms.Panel();
+            this.add_btn = new System.Windows.Forms.Button();
             this.browseCheck = new System.Windows.Forms.RadioButton();
             this.liveCheck = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
@@ -63,7 +64,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.add_btn = new System.Windows.Forms.Button();
+            this.search_btn = new System.Windows.Forms.Button();
             this.welcome_panel.SuspendLayout();
             this.main_pane.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picStream)).BeginInit();
@@ -89,6 +90,7 @@
             // 
             this.main_pane.BackColor = System.Drawing.Color.Transparent;
             this.main_pane.BackgroundImage = global::VPproject.Properties.Resources.bg2;
+            this.main_pane.Controls.Add(this.search_btn);
             this.main_pane.Controls.Add(this.add_btn);
             this.main_pane.Controls.Add(this.browseCheck);
             this.main_pane.Controls.Add(this.liveCheck);
@@ -118,6 +120,17 @@
             this.main_pane.TabIndex = 1;
             this.main_pane.Visible = false;
             this.main_pane.Paint += new System.Windows.Forms.PaintEventHandler(this.main_pane_Paint);
+            // 
+            // add_btn
+            // 
+            this.add_btn.Location = new System.Drawing.Point(161, 375);
+            this.add_btn.Name = "add_btn";
+            this.add_btn.Size = new System.Drawing.Size(75, 23);
+            this.add_btn.TabIndex = 22;
+            this.add_btn.Text = "Add";
+            this.add_btn.UseVisualStyleBackColor = true;
+            this.add_btn.Visible = false;
+            this.add_btn.Click += new System.EventHandler(this.add_btn_Click);
             // 
             // browseCheck
             // 
@@ -422,16 +435,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Welcome";
             // 
-            // add_btn
+            // search_btn
             // 
-            this.add_btn.Location = new System.Drawing.Point(161, 375);
-            this.add_btn.Name = "add_btn";
-            this.add_btn.Size = new System.Drawing.Size(75, 23);
-            this.add_btn.TabIndex = 22;
-            this.add_btn.Text = "Add";
-            this.add_btn.UseVisualStyleBackColor = true;
-            this.add_btn.Visible = false;
-            this.add_btn.Click += new System.EventHandler(this.add_btn_Click);
+            this.search_btn.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.search_btn.Location = new System.Drawing.Point(66, 387);
+            this.search_btn.Name = "search_btn";
+            this.search_btn.Size = new System.Drawing.Size(56, 24);
+            this.search_btn.TabIndex = 23;
+            this.search_btn.Text = "Search";
+            this.search_btn.UseVisualStyleBackColor = true;
+            this.search_btn.Click += new System.EventHandler(this.search_btn_Click);
             // 
             // card_proj
             // 
@@ -495,6 +508,7 @@
         private System.Windows.Forms.RadioButton browseCheck;
         private System.Windows.Forms.RadioButton liveCheck;
         private System.Windows.Forms.Button add_btn;
+        private System.Windows.Forms.Button search_btn;
     }
 }
 

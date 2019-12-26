@@ -60,13 +60,15 @@ namespace VPproject
             MySqlConnection gdb = new MySqlConnection(con1);
             
                
-            string q = "SELECT * FROM testdb1.student_data";
+            string q = "SELECT * FROM testdb1.student_data ORDER BY student_info_time DESC";
 
             gdb.Open();
-            MySqlCommand cmd = new MySqlCommand(q,gdb);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            student_grid.DataSource = reader;
-          //  student_grid.DataBindings();
+            //MySqlCommand cmd = new MySqlCommand(q,gdb);
+            MySqlDataAdapter adap = new MySqlDataAdapter(q, gdb);
+            
+            DataSet s = new DataSet();
+            adap.Fill(s);
+            student_grid.DataSource = s.Tables[0];
             gdb.Close();
              
 

@@ -42,7 +42,7 @@ namespace VPproject
             MySqlDataReader myReader;
 
             conDB.Open();
-            //cmdDB.ExecuteReader();
+           
             conDB.Close();
 
             startInfo = new ProcessStartInfo();
@@ -294,25 +294,27 @@ namespace VPproject
 
         private void log_btn_Click(object sender, EventArgs e)
         {
-            
-           
-            if (tb_un.Text == "hamzamansoorch" && tb_pw.Text == "1234")
-            {
-                welcome_panel.Visible = true;
-                log_pan.Visible = false;
-                main_pane.Visible = true;
-            }
-            else
-            {
-                MessageBox.Show("Invalid Entries");
-            }
+            welcome_panel.Visible = true;
+            log_pan.Visible = false;
+            main_pane.Visible = true;
+
+            //if (tb_un.Text == "hamzamansoorch" && tb_pw.Text == "1234")
+            //{
+            //    welcome_panel.Visible = true;
+            //    log_pan.Visible = false;
+            //    main_pane.Visible = true;
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Invalid Entries");
+            //}
         }
 
 
 
         private void add_btn_Click(object sender, EventArgs e)
         {
-            string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "');";
+            string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration,student_info_time) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "');";
             MySqlConnection conDB = new MySqlConnection(con);
             MySqlCommand cmdDB = new MySqlCommand(query, conDB);
             MySqlDataReader myReader;

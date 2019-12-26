@@ -45,8 +45,8 @@
             this.name_box = new System.Windows.Forms.TextBox();
             this.srchClick_btn = new System.Windows.Forms.Button();
             this.grid_panel = new System.Windows.Forms.Panel();
-            this.student_grid = new System.Windows.Forms.DataGridView();
             this.grid_btn = new System.Windows.Forms.Button();
+            this.student_grid = new System.Windows.Forms.DataGridView();
             this.displayall_btn = new System.Windows.Forms.Button();
             this.grid_panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.student_grid)).BeginInit();
@@ -204,14 +204,6 @@
             this.grid_panel.Size = new System.Drawing.Size(799, 388);
             this.grid_panel.TabIndex = 33;
             // 
-            // student_grid
-            // 
-            this.student_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.student_grid.Location = new System.Drawing.Point(13, 91);
-            this.student_grid.Name = "student_grid";
-            this.student_grid.Size = new System.Drawing.Size(769, 244);
-            this.student_grid.TabIndex = 0;
-            // 
             // grid_btn
             // 
             this.grid_btn.Location = new System.Drawing.Point(293, 354);
@@ -221,6 +213,14 @@
             this.grid_btn.Text = "Show";
             this.grid_btn.UseVisualStyleBackColor = true;
             this.grid_btn.Click += new System.EventHandler(this.grid_btn_Click);
+            // 
+            // student_grid
+            // 
+            this.student_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.student_grid.Location = new System.Drawing.Point(13, 91);
+            this.student_grid.Name = "student_grid";
+            this.student_grid.Size = new System.Drawing.Size(769, 244);
+            this.student_grid.TabIndex = 0;
             // 
             // displayall_btn
             // 

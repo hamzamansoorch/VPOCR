@@ -22,33 +22,31 @@ namespace VPproject
     public partial class card_proj : Form
     {
         string con = "datasource=127.0.0.1;port=3306;username=root;password=1234";
-        string query = "Insert into testdb1.student_data(student_id,student_name,student_program,student_age) Values ('01-241162-028','Usama Mansoor','BSE','18')";
-    
 
+        //The object for running Python
         ProcessStartInfo startInfo;
+
+        //Emgu CV's camera running object
         Capture cap;
+
         bool streaming;
         Stopwatch s = new Stopwatch();
         string path = "";
-        private readonly string _tesseractExePath;
-        private readonly string _language;
+
+        //private readonly string _tesseractExePath;
+        //private readonly string _language;
+
         Bitmap c;
 
         public card_proj()
         {
             InitializeComponent();
-            MySqlConnection conDB = new MySqlConnection(con);
-            MySqlCommand cmdDB = new MySqlCommand(query, conDB);
-            MySqlDataReader myReader;
-
-            conDB.Open();
-           
-            conDB.Close();
-
+            
+            
             startInfo = new ProcessStartInfo();
             startInfo.FileName = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\ocrScript.py";
 
-
+            
             welcome_panel.Visible = true;
             main_pane.Visible = false;
             log_pan.Visible = false;
@@ -61,22 +59,6 @@ namespace VPproject
             back_button.Font = f;
         }
 
-        public card_proj(string tesseractDir, string language = "en", string dataDir = null)
-        {
-
-            
-            // Tesseract checking
-            _tesseractExePath = Path.Combine(tesseractDir, "tesseract.exe");
-            _language = language;
-
-            if (String.IsNullOrEmpty(dataDir))
-                dataDir = Path.Combine(tesseractDir, "tessdata");
-
-            Environment.SetEnvironmentVariable("TESSDATA_PREFIX", dataDir);
-        }
-
-
-    
 
         private void streamOnOff_Click(object sender, EventArgs e)
         {
@@ -97,13 +79,14 @@ namespace VPproject
 
         private void streamProcess(object sender, System.EventArgs e)
         {
+            //Continously showing stream on picture box
             var img = cap.QueryFrame().ToImage<Bgr, byte>();
             var bmp = img.ToBitmap();
             picStream.Image = bmp;
         }
 
         private void capture_btn_Click(object sender, EventArgs e)
-        {
+        {        
             var img = cap.QueryFrame().ToImage<Bgr, byte>();
             var bmp = img.ToBitmap();
             
@@ -113,15 +96,25 @@ namespace VPproject
             int width = c.Width;
             int height = c.Height;
 
-            int i = 0;
-            Color p;
-            File.Delete(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
-            c.Save(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
-            startInfo.Arguments = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp";
-          
-            int x, y;
+
+            try
+            {
+                File.Delete(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
+                c.Save(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp");
+                startInfo.Arguments = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\abc.bmp";
+            }
+            catch(Exception exep)
+            {
+                MessageBox.Show(exep.Message);
+            }
+
             main_pb.Image = c;
 
+        }
+
+        private void imageSavebtn_Click(object sender, EventArgs e)
+        {
+           
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -143,10 +136,7 @@ namespace VPproject
                 startInfo.Arguments = open.FileName;
                 Bitmap c = new Bitmap(open.FileName);
             
-
-                int x, y;
-
-                
+               
                 main_pb.Image = c;
                 browse_tb.Text = open.FileName;
                 path = open.FileName;
@@ -158,9 +148,11 @@ namespace VPproject
 
         private void perform_button_Click(object sender, EventArgs e)
         {
+            string imagePath;
             WaitForm please = new WaitForm();
             please.Visible = true;
             int count = 0;
+            
             try
             {
                 using (Process exeProcess = Process.Start(startInfo))
@@ -179,7 +171,7 @@ namespace VPproject
             string search = "01-";
             string enrollment = "";
             int pos = text.IndexOf(search);
-            if (pos > 0)
+            if (pos >= 0)
             {
                 for (int a = pos; a < (pos + 13); a++)
                 {
@@ -193,36 +185,51 @@ namespace VPproject
                 reg_box.Text = "";
 
 
-                string query = "SELECT student_name,student_dept,student_semester,student_batch,student_registration FROM testdb1.student_data where student_id = '" + enrollment + "';";
+                string query = "SELECT student_name,student_dept,student_semester,student_batch,student_registration,student_image FROM testdb1.student_data where student_id = '" + enrollment + "';";
                 MySqlConnection conDB = new MySqlConnection(con);
                 MySqlCommand cmdDB = new MySqlCommand(query, conDB);
                 MySqlDataReader myReader;
 
-                conDB.Open();
-                myReader = cmdDB.ExecuteReader();
-
-                while (myReader.Read())
+                try
                 {
-                    name_box.Text = myReader.GetString("student_name");
-                    dept_box.Text = myReader.GetString("student_dept");
-                    batch_box.Text = myReader.GetString("student_batch");
-                    semester_box.Text = myReader.GetString("student_semester");
-                    reg_box.Text = myReader.GetString("student_registration");
+                    conDB.Open();
+                    myReader = cmdDB.ExecuteReader();
 
-                    count++;
+                    while (myReader.Read())
+                    {
+                        name_box.Text = myReader.GetString("student_name");
+                        dept_box.Text = myReader.GetString("student_dept");
+                        batch_box.Text = myReader.GetString("student_batch");
+                        semester_box.Text = myReader.GetString("student_semester");
+                        reg_box.Text = myReader.GetString("student_registration");
+                        imagePath = myReader.GetString("student_image");
+
+                        string newpath = imagePath.Replace(@"\\", @"\");
+
+                        Bitmap c = new Bitmap(newpath);
+
+                        main_pb.Image = c;
+                        main_pb.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                        count++;
+                    }
+                    conDB.Close();
+
                 }
-                conDB.Close();
+                catch(Exception exep)
+                {
 
+                }
                 if (count == 0)
                 {
                     MessageBox.Show("User not found. Add by filling in details");
                     add_btn.Visible = true;
-
+                    MessageBox.Show("Please Stand Still to take your picture");
                 }
             }
             else if (pos == -1)
             {
-                MessageBox.Show("Error reading the imgage. Try again.");
+                MessageBox.Show("Error reading the image. Try again.");
             }
             please.Visible = false;
             if (browseCheck.Checked == true)
@@ -242,6 +249,8 @@ namespace VPproject
 
                 please.Visible = false;
             }
+
+
         }
 
         private void main_pane_Paint(object sender, PaintEventArgs e)
@@ -314,7 +323,8 @@ namespace VPproject
 
         private void add_btn_Click(object sender, EventArgs e)
         {
-            string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration,student_info_time) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "');";
+            string imagePath = @"C:\\Users\\Hamza_PC\\Downloads\\VPProjectTest\\Images\\" + enroll_box.Text + ".bmp";
+            string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration,student_info_time,student_image) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + imagePath + "');";
             MySqlConnection conDB = new MySqlConnection(con);
             MySqlCommand cmdDB = new MySqlCommand(query, conDB);
             MySqlDataReader myReader;
@@ -322,13 +332,31 @@ namespace VPproject
             conDB.Open();
             cmdDB.ExecuteReader();
             conDB.Close();
+
+
+            var img = cap.QueryFrame().ToImage<Bgr, byte>();
+            var bmp = img.ToBitmap();
+            Bitmap c = new Bitmap(bmp);
+
+            if (!File.Exists(imagePath))
+            {
+                c.Save(imagePath);
+            }
+            else
+            {
+                MessageBox.Show("Image already exists");
+            }
+
+
+            MessageBox.Show("Added successfully");
+
             enroll_box.Text = "";
             name_box.Text = "";
             dept_box.Text = "";
             batch_box.Text = "";
             semester_box.Text = "";
             reg_box.Text = "";
-            MessageBox.Show("Added successfully");
+
             add_btn.Visible = false;
 
         }
@@ -355,5 +383,7 @@ namespace VPproject
             SearchAndSort s = new SearchAndSort();
             s.Show();
         }
+
+
     }
 }

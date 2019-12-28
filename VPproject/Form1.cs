@@ -41,8 +41,9 @@ namespace VPproject
         public card_proj()
         {
             InitializeComponent();
-            
-            
+
+            File.WriteAllText(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\test.txt", string.Empty);
+
             startInfo = new ProcessStartInfo();
             startInfo.FileName = @"C:\Users\Hamza_PC\Downloads\VPProjectTest\ocrScript.py";
 
@@ -152,7 +153,7 @@ namespace VPproject
             WaitForm please = new WaitForm();
             please.Visible = true;
             int count = 0;
-            
+
             try
             {
                 using (Process exeProcess = Process.Start(startInfo))
@@ -167,91 +168,98 @@ namespace VPproject
             }
 
             string text = File.ReadAllText(@"C:\Users\Hamza_PC\Downloads\VPProjectTest\test.txt", Encoding.UTF8);
+            //if (text.Count() == 0)
+            //{
+            //    MessageBox.Show("There is nothing shown to the system");
+            //    please.Visible = false;
+            //}
+           
 
-            string search = "01-";
-            string enrollment = "";
-            int pos = text.IndexOf(search);
-            if (pos >= 0)
-            {
-                for (int a = pos; a < (pos + 13); a++)
+
+                string search = "01-";
+                string enrollment = "";
+                int pos = text.IndexOf(search);
+                if (pos >= 0)
                 {
-                    enrollment = enrollment + text[a];
-                }
-                enroll_box.Text = enrollment;
-                name_box.Text = "";
-                dept_box.Text = "";
-                batch_box.Text = "";
-                semester_box.Text = "";
-                reg_box.Text = "";
-
-
-                string query = "SELECT student_name,student_dept,student_semester,student_batch,student_registration,student_image FROM testdb1.student_data where student_id = '" + enrollment + "';";
-                MySqlConnection conDB = new MySqlConnection(con);
-                MySqlCommand cmdDB = new MySqlCommand(query, conDB);
-                MySqlDataReader myReader;
-
-                try
-                {
-                    conDB.Open();
-                    myReader = cmdDB.ExecuteReader();
-
-                    while (myReader.Read())
+                    for (int a = pos; a < (pos + 13); a++)
                     {
-                        name_box.Text = myReader.GetString("student_name");
-                        dept_box.Text = myReader.GetString("student_dept");
-                        batch_box.Text = myReader.GetString("student_batch");
-                        semester_box.Text = myReader.GetString("student_semester");
-                        reg_box.Text = myReader.GetString("student_registration");
-                        imagePath = myReader.GetString("student_image");
-
-                        string newpath = imagePath.Replace(@"\\", @"\");
-
-                        Bitmap c = new Bitmap(newpath);
-
-                        main_pb.Image = c;
-                        main_pb.SizeMode = PictureBoxSizeMode.StretchImage;
-
-                        count++;
+                        enrollment = enrollment + text[a];
                     }
-                    conDB.Close();
+                    enroll_box.Text = enrollment;
+                    name_box.Text = "";
+                    dept_box.Text = "";
+                    batch_box.Text = "";
+                    semester_box.Text = "";
+                    reg_box.Text = "";
 
+
+                    string query = "SELECT student_name,student_dept,student_semester,student_batch,student_registration,student_image FROM testdb1.student_data where student_id = '" + enrollment + "';";
+                    MySqlConnection conDB = new MySqlConnection(con);
+                    MySqlCommand cmdDB = new MySqlCommand(query, conDB);
+                    MySqlDataReader myReader;
+
+                    try
+                    {
+                        conDB.Open();
+                        myReader = cmdDB.ExecuteReader();
+
+                        while (myReader.Read())
+                        {
+                            name_box.Text = myReader.GetString("student_name");
+                            dept_box.Text = myReader.GetString("student_dept");
+                            batch_box.Text = myReader.GetString("student_batch");
+                            semester_box.Text = myReader.GetString("student_semester");
+                            reg_box.Text = myReader.GetString("student_registration");
+                            imagePath = myReader.GetString("student_image");
+
+                            string newpath = imagePath.Replace(@"\\", @"\");
+
+                            Bitmap c = new Bitmap(newpath);
+
+                            main_pb.Image = c;
+                            main_pb.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                            count++;
+                        }
+                        conDB.Close();
+
+                    }
+                    catch (Exception exep)
+                    {
+                    MessageBox.Show(exep.Message);
+                    }
+                    if (count == 0)
+                    {
+                        MessageBox.Show("User not found. Add by filling in details");
+                        add_btn.Visible = true;
+                        MessageBox.Show("Please Stand Still to take your picture");
+                    }
                 }
-                catch(Exception exep)
+                else if (pos == -1)
+                {
+                    MessageBox.Show("Error reading the image. Try again.");
+                }
+                please.Visible = false;
+                if (browseCheck.Checked == true)
                 {
 
+                    please.Visible = true;
+
+
+
+                    please.Visible = false;
+
                 }
-                if (count == 0)
+                else if (liveCheck.Checked == true)
                 {
-                    MessageBox.Show("User not found. Add by filling in details");
-                    add_btn.Visible = true;
-                    MessageBox.Show("Please Stand Still to take your picture");
+                    // WaitForm please = new WaitForm();
+                    please.Visible = true;
+
+                    please.Visible = false;
                 }
             }
-            else if (pos == -1)
-            {
-                MessageBox.Show("Error reading the image. Try again.");
-            }
-            please.Visible = false;
-            if (browseCheck.Checked == true)
-            {
-               
-                please.Visible = true;
 
-
-
-                please.Visible = false;
-
-            }
-            else if (liveCheck.Checked == true)
-            {
-               // WaitForm please = new WaitForm();
-                please.Visible = true;
-
-                please.Visible = false;
-            }
-
-
-        }
+        
 
         private void main_pane_Paint(object sender, PaintEventArgs e)
         {
@@ -303,20 +311,17 @@ namespace VPproject
 
         private void log_btn_Click(object sender, EventArgs e)
         {
-            welcome_panel.Visible = true;
-            log_pan.Visible = false;
-            main_pane.Visible = true;
-
-            //if (tb_un.Text == "hamzamansoorch" && tb_pw.Text == "1234")
-            //{
-            //    welcome_panel.Visible = true;
-            //    log_pan.Visible = false;
-            //    main_pane.Visible = true;
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Invalid Entries");
-            //}
+           
+            if (tb_un.Text == "hamzamansoorch" && tb_pw.Text == "1234")
+            {
+                welcome_panel.Visible = true;
+                log_pan.Visible = false;
+                main_pane.Visible = true;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Entries");
+            }
         }
 
 
@@ -325,39 +330,46 @@ namespace VPproject
         {
             string imagePath = @"C:\\Users\\Hamza_PC\\Downloads\\VPProjectTest\\Images\\" + enroll_box.Text + ".bmp";
             string query = "INSERT into testdb1.student_data (student_id,student_name,student_dept,student_semester,student_batch,student_registration,student_info_time,student_image) VALUES('" + enroll_box.Text + "','" + name_box.Text + "','" + dept_box.Text + "','" + semester_box.Text + "','" + batch_box.Text + "','" + reg_box.Text + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','" + imagePath + "');";
-            MySqlConnection conDB = new MySqlConnection(con);
-            MySqlCommand cmdDB = new MySqlCommand(query, conDB);
-            MySqlDataReader myReader;
-
-            conDB.Open();
-            cmdDB.ExecuteReader();
-            conDB.Close();
-
-
-            var img = cap.QueryFrame().ToImage<Bgr, byte>();
-            var bmp = img.ToBitmap();
-            Bitmap c = new Bitmap(bmp);
-
-            if (!File.Exists(imagePath))
+            if (string.IsNullOrWhiteSpace(name_box.Text)|| string.IsNullOrWhiteSpace(enroll_box.Text) || string.IsNullOrWhiteSpace(dept_box.Text) || string.IsNullOrWhiteSpace(semester_box.Text) || string.IsNullOrWhiteSpace(batch_box.Text) || string.IsNullOrWhiteSpace(reg_box.Text))
             {
-                c.Save(imagePath);
+                MessageBox.Show("Fill the required fields!");
             }
             else
             {
-                MessageBox.Show("Image already exists");
+                MySqlConnection conDB = new MySqlConnection(con);
+                MySqlCommand cmdDB = new MySqlCommand(query, conDB);
+                MySqlDataReader myReader;
+
+                conDB.Open();
+                cmdDB.ExecuteReader();
+                conDB.Close();
+
+
+                var img = cap.QueryFrame().ToImage<Bgr, byte>();
+                var bmp = img.ToBitmap();
+                Bitmap c = new Bitmap(bmp);
+
+                if (!File.Exists(imagePath))
+                {
+                    c.Save(imagePath);
+                }
+                else
+                {
+                    MessageBox.Show("Image already exists");
+                }
+
+
+                MessageBox.Show("Added successfully");
+
+                enroll_box.Text = "";
+                name_box.Text = "";
+                dept_box.Text = "";
+                batch_box.Text = "";
+                semester_box.Text = "";
+                reg_box.Text = "";
+                add_btn.Visible = false;
             }
-
-
-            MessageBox.Show("Added successfully");
-
-            enroll_box.Text = "";
-            name_box.Text = "";
-            dept_box.Text = "";
-            batch_box.Text = "";
-            semester_box.Text = "";
-            reg_box.Text = "";
-
-            add_btn.Visible = false;
+            
 
         }
 

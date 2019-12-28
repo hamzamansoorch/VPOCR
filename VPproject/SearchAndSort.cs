@@ -28,7 +28,8 @@ namespace VPproject
         {
 
             int count = 0;
-            string check = "SELECT student_name,student_id,student_dept,student_semester,student_batch,student_registration FROM testdb1.student_data where student_id = '" + en_tb.Text +"';";
+            string imgPath;
+            string check = "SELECT student_name,student_id,student_dept,student_semester,student_batch,student_registration,student_image FROM testdb1.student_data where student_id = '" + en_tb.Text +"';";
             MySqlConnection srchDB = new MySqlConnection(con1);
             MySqlCommand cmdDB = new MySqlCommand(check, srchDB);
             MySqlDataReader myReader;
@@ -44,6 +45,10 @@ namespace VPproject
                 batch_box.Text = myReader.GetString("student_batch");
                 semester_box.Text = myReader.GetString("student_semester");
                 reg_box.Text = myReader.GetString("student_registration");
+                imgPath = myReader.GetString("student_image");
+                Bitmap d = new Bitmap(imgPath);
+                pic_db.Image = d;
+                pic_db.SizeMode = PictureBoxSizeMode.StretchImage;
 
                 count++;
             }

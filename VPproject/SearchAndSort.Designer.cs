@@ -48,8 +48,10 @@
             this.grid_btn = new System.Windows.Forms.Button();
             this.student_grid = new System.Windows.Forms.DataGridView();
             this.displayall_btn = new System.Windows.Forms.Button();
+            this.pic_db = new System.Windows.Forms.PictureBox();
             this.grid_panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.student_grid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_db)).BeginInit();
             this.SuspendLayout();
             // 
             // search_lbl
@@ -206,6 +208,7 @@
             // 
             // grid_btn
             // 
+            this.grid_btn.Font = new System.Drawing.Font("Corbel", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grid_btn.Location = new System.Drawing.Point(293, 354);
             this.grid_btn.Name = "grid_btn";
             this.grid_btn.Size = new System.Drawing.Size(186, 23);
@@ -233,6 +236,14 @@
             this.displayall_btn.UseVisualStyleBackColor = true;
             this.displayall_btn.Click += new System.EventHandler(this.displayall_btn_Click);
             // 
+            // pic_db
+            // 
+            this.pic_db.Location = new System.Drawing.Point(115, 60);
+            this.pic_db.Name = "pic_db";
+            this.pic_db.Size = new System.Drawing.Size(146, 121);
+            this.pic_db.TabIndex = 2;
+            this.pic_db.TabStop = false;
+            // 
             // SearchAndSort
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,6 +252,7 @@
             this.ClientSize = new System.Drawing.Size(823, 412);
             this.Controls.Add(this.grid_panel);
             this.Controls.Add(this.displayall_btn);
+            this.Controls.Add(this.pic_db);
             this.Controls.Add(this.srchClick_btn);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -261,6 +273,7 @@
             this.Text = "SearchAndSort";
             this.grid_panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.student_grid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic_db)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -288,5 +301,6 @@
         private System.Windows.Forms.Button grid_btn;
         private System.Windows.Forms.DataGridView student_grid;
         private System.Windows.Forms.Button displayall_btn;
+        private System.Windows.Forms.PictureBox pic_db;
     }
 }
